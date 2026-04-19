@@ -1,0 +1,25 @@
+import hashlib
+
+class Block:
+    def __init__(self, data, prev_hash):
+        self.data = data
+        self.prev_hash = prev_hash
+        self.hash = self.create_hash()
+
+    def create_hash(self):
+        text = self.data + self.prev_hash
+        return hashlib.sha256(text.encode()).hexdigest()
+
+# Create blocks
+genesis = Block("Genesis Block", "0")
+block1 = Block("Transaction 1", genesis.hash)
+block2 = Block("Transaction 2", block1.hash)
+block3 = Block("Transaction 3", block2.hash)
+
+# Display blocks
+for i, block in enumerate([genesis, block1, block2, block3]):
+    print(f"Block {i}")
+    print("Data:", block.data)
+    print("Previous Hash:", block.prev_hash)
+    print("Current Hash:", block.hash)
+    print("-" * 40)
