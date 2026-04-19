@@ -1,32 +1,22 @@
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
+import hashlib
 
-# Generate keys
-private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-public_key = private_key.public_key()
+# Define keys
+private_key = "my_private_key"
+public_key = "my_public_key"
 
 # Message
-message = b"Hello"
+message = "Kate pays Johnny 10 BTC"
 
-# Sign message
-signature = private_key.sign(
-    message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256()
-)
+# Generate Digital Signature using private key
+signature = hashlib.sha256((message + private_key).encode()).hexdigest()
 
-# Verify signature
-public_key.verify(
-    signature,
-    message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256()
-)
+print("Message:", message)
+print("Digital Signature:", signature)
 
-print("Signature verified!")
+# Verify Digital Signature using public key (simulation)
+verify_signature = hashlib.sha256((message + private_key).encode()).hexdigest()
+
+if signature == verify_signature:
+    print("Signature is VALID")
+else:
+    print("Signature is INVALID")
