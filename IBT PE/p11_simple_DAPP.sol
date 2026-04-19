@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-contract SimpleDApp {
-    uint public value;
+contract SimpleStorage {
 
-    // Store a value
-    function setValue(uint _value) public {
-        value = _value;
+    uint256 private storedData;
+
+    // Store value
+    function store(uint256 _value) public {
+        storedData = _value;
     }
 
-    // Read value (auto-generated getter also works)
-    function getValue() public view returns (uint) {
-        return value;
+    // Retrieve value
+    function retrieve() public view returns (uint256) {
+        return storedData;
     }
 }
