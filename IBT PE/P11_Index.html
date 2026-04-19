@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple DApp</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+</head>
+<body>
+
+    <h2>Simple Storage DApp</h2>
+
+    <button onclick="connectWallet()">Connect MetaMask</button>
+    <br><br>
+
+    <input type="number" id="valueInput" placeholder="Enter value">
+    <button onclick="storeValue()">Store</button>
+
+    <br><br>
+
+    <button onclick="getValue()">Retrieve</button>
+
+    <h3>Stored Value: <span id="output">0</span></h3>
+
+<script>
+    let provider;
+    let signer;
+    let contract;
+
+    // Replace with your deployed contract address
+    const contractAddress = "0x56fB4F53954A12fC3308511ADA48a67Bf01D30d3";
+
+    // Replace with your ABI
+    const contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "store",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "retrieve",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+    ];
+
+   async function connectWallet() {
+    try {
+        if (typeof window.ethereum !== "undefined") {
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+
+            contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+            console.log("Contract initialized:", contract);
+
+            alert("Wallet Connected ✅");
+        } else {
+            alert("MetaMask not installed ❌");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+    async function storeValue() {
+    if (!contract) {
+        alert("Connect wallet first!");
+        return;
+    }
+
+    const value = document.getElementById("valueInput").value;
+
+    const tx = await contract.store(value);
+    await tx.wait();
+
+    alert("Value Stored!");
+}
+
+async function getValue() {
+    if (!contract) {
+        alert("Connect wallet first!");
+        return;
+    }
+
+    const value = await contract.retrieve();
+    document.getElementById("output").innerText = value;
+}
+</script>
+
+</body>
+</html>
