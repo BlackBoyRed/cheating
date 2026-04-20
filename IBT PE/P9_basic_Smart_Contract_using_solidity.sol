@@ -1,5 +1,4 @@
-pragma solidity 0.8.19; // Using 0.8.19 avoids the
-PUSH0 opcode issue in Ganache
+pragma solidity 0.8.19; // Using 0.8.19 avoids thePUSH0 opcode issue in Ganache
 
 contract GanacheCompatibleStore {
     uint256 private number;
